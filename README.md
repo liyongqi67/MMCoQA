@@ -8,7 +8,7 @@ For more details check out our ACL2022 paper "[MMCoQA: Conversational Question A
 The MMCoQA dataset can be downloaded via this [link](https://drive.google.com/drive/folders/1ErP9sjKYKxP76B18mjAyDnOTPn08emZD?usp=sharing).
 
 # Dataset format
-
+Coming
 
 
 # Contact
