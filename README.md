@@ -11,8 +11,8 @@ The MMCoQA dataset can be downloaded via this [link](https://drive.google.com/dr
 In the [dataset](https://drive.google.com/drive/folders/1ErP9sjKYKxP76B18mjAyDnOTPn08emZD?usp=sharing) folder you will find the following file question and contexts files:
 1) `MMCoQA_train.text,MMCoQA_dev.text,MMCoQA_test.text` - contains questions, evidence and answers, for train, dev and test set respectively
 Each line is a json format, that contains one question, the gold question, the conversation history, alongside its answers.
-2) `qrels.txt` - contains the question and its relevant evidence (one document, table, or image).
-3) `multimodalqa_final_dataset_pipeline_camera_ready_MMQA_images.jsonl` - contains metadata (id, title, path) for each image. You could load the image according to the `path` from the final_dataset_images.zip data.
+2) `qrels.txt` - contains the question and its relevant evidence (one document, table, or image) label.
+3) `multimodalqa_final_dataset_pipeline_camera_ready_MMQA_images.jsonl` - contains metadata (id, title, path) for each image. You could load one image according to its `path` from the final_dataset_images.zip data.
 4) `multimodalqa_final_dataset_pipeline_camera_ready_MMQA_tables.jsonl` - Each line  represents a single table. table_rows is a list of rows, and each row contains is a list of cells. Each cell is provided with its text string and wikipedia entities. header provides for each column in the table: its name alongside parsing metadata computed such as NERs and item types. 
 5) `multimodalqa_final_dataset_pipeline_camera_ready_MMQA_tables.jsonl` - contains metadata (id, title, text) for each document.
 
