@@ -32,9 +32,9 @@ python3 train_retriever.py
 --images_path final_dataset_images \
 --retrieve_checkpoint ./retriever_checkpoint/checkpoint-5917
 ```
-This script will store the checkpoints under the retriever_release_test file. For your convenience, we upload the checkpoint 'checkpoint-5061' in this link.
+This script will store the checkpoints under the retriever_release_test folder. For your convenience, we upload our results (the checkpoint 'checkpoint-5061') in this link.
 
-4. Generate embedding of docs.
+4. Generate embedding of docs via setting retrieve_checkpoint as the corresponding checkpoint file under the retriever_release_test folder.
 ```
 python3 train_retriever.py 
 --gen_passage_rep True \
@@ -58,8 +58,8 @@ python3 train_pipeline.py
 --gen_passage_rep_output ./retriever_release_test/dev_blocks.txt \
 --retrieve_checkpoint ./retriever_release_test/checkpoint-5061 \
 ```
-This script will train the pipeline (retriever and answer extraction components) and store the checkpoints in release_test file. For your convenience, we upload the checkpoint 'checkpoint-12000' in this link. 
-The checkpoint 'checkpoint-12000' could achieve the results:
+This script will train the pipeline (retriever and answer extraction components) and store the checkpoints in release_test folder. For your convenience, we upload our results 'checkpoint-12000' in this link. 
+The checkpoint 'checkpoint-12000' could achieve the results in the paper:
 Dev set: {"f1": 4.586325704965762, "EM": 0.020654044750430294, "retriever_ndcg": 0.07209415622067673, "retriever_recall": 0.42168674698795183}
 Test set: {"f1": 3.584818194987687, "EM": 0.0288135593220339, "retriever_ndcg": 0.07655641068040793, "retriever_recall": 0.4271186440677966}
 # Environment Requirement
