@@ -619,6 +619,9 @@ parser.add_argument("--images_file",
 
 parser.add_argument("--qrels", default='/home/share/liyongqi/project/MMCoQA/data/MMCoQA_data/final_data/QA pairs/qrels.txt', type=str, required=False,
                     help="qrels to evaluate open retrieval")
+parser.add_argument("--images_path", 
+                    default="/home/share/liyongqi/project/MMCoQA/data/MMCoQA_data/final_data/multimodal_evidence_collection/images/final_dataset_images/", type=str,
+                    help="the path to images")
 
 parser.add_argument("--gen_passage_rep_output", 
                     default='./retriever_release_test/dev_blocks.txt', type=str,
@@ -921,7 +924,7 @@ with open(args.images_file,'r') as f:
     lines=f.readlines()
     for line in lines:
         line=json.loads(line.strip())
-        images_dict[line['id']]="/home/share/liyongqi/project/MMCoQA/data/MMCoQA_data/final_data/multimodal_evidence_collection/images/final_dataset_images/"+line['path']
+        images_dict[line['id']]=args.images_path+line['path']
 
 
         itemid_modalities.append('image')
