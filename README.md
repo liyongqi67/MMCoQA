@@ -91,4 +91,4 @@ The code has been tested running under Python 3.8.8 The required packages are as
 - scipy == 1.6.2
 
 # Contact
-If there is any problem, please email liyongqi0@gmail.com
+If there is any problem, please email liyongqi0@gmail.com. Please do not hesitate to email me directly as I do not frequently check GitHub issues.
