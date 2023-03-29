@@ -77,6 +77,8 @@ python3 train_pipeline.py
   Dev set: {"f1": 4.586325704965762, "EM": 0.020654044750430294, "retriever_ndcg": 0.07209415622067673, "retriever_recall": 0.42168674698795183}
   
   Test set: {"f1": 3.584818194987687, "EM": 0.0288135593220339, "retriever_ndcg": 0.07655641068040793, "retriever_recall": 0.4271186440677966}
+  
+  The file of the prints while running train_pipeline.py is in this [link] (https://drive.google.com/file/d/1Zk3zAibxzfONZvD4bUL_cYoF30xs1Gbw/view?usp=sharing).
 # Environment Requirement
 The code has been tested running under Python 3.8.8 The required packages are as follows:
 - pytorch == 1.8.0
