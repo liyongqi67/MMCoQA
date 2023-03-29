@@ -60,6 +60,18 @@ python3 train_pipeline.py
 ```
   This script will train the pipeline (retriever and answer extraction components) and store the checkpoints in release_test folder. For your convenience, we upload our results 'checkpoint-12000' in this [link](https://drive.google.com/file/d/1HW__WoZ13qqtPrw8t-bLb9eTEHzjsDJ0/view?usp=sharing). 
   
+  You could load the checkpoint and test it via:
+```
+python3 train_pipeline.py 
+--do_train False --do_eval False --do_test True --best_global_step 12000 \
+--train_file MMCoQA_train.txt --dev_file MMCoQA_dev.txt --test_file MMCoQA_test.txt \
+--passages_file multimodalqa_final_dataset_pipeline_camera_ready_MMQA_texts.jsonl \
+--multimodalqa_final_dataset_pipeline_camera_ready_MMQA_tables.jsonl \
+--images_file multimodalqa_final_dataset_pipeline_camera_ready_MMQA_images.jsonl \
+--images_path final_dataset_images \
+--gen_passage_rep_output ./retriever_release_test/dev_blocks.txt \
+--retrieve_checkpoint ./retriever_release_test/checkpoint-5061 \
+```
   The checkpoint 'checkpoint-12000' could achieve the results in the paper:
   
   Dev set: {"f1": 4.586325704965762, "EM": 0.020654044750430294, "retriever_ndcg": 0.07209415622067673, "retriever_recall": 0.42168674698795183}
