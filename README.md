@@ -23,6 +23,7 @@ Each line is a json format, that contains one question, the gold question, the c
 
 3) Directly run train_retriever.py by setting the corresponding file path.
 
+```
 python3 train_retriever.py 
 --train_file MMCoQA_train.txt --dev_file MMCoQA_dev.txt --test_file MMCoQA_test.txt \
 --passages_file multimodalqa_final_dataset_pipeline_camera_ready_MMQA_texts.jsonl \
@@ -30,10 +31,11 @@ python3 train_retriever.py
 --images_file multimodalqa_final_dataset_pipeline_camera_ready_MMQA_images.jsonl \
 --images_path final_dataset_images \
 --retrieve_checkpoint ./retriever_checkpoint/checkpoint-5917
-
+```
 This script will store the checkpoints under the retriever_release_test file. For your convenience, we upload the checkpoint 'checkpoint-5061' in this link.
 
 4. Generate embedding of docs.
+```
 python3 train_retriever.py 
 --gen_passage_rep True \
 --retrieve_checkpoint ./retriever_release_test/checkpoint-5061 \
@@ -42,10 +44,11 @@ python3 train_retriever.py
 --multimodalqa_final_dataset_pipeline_camera_ready_MMQA_tables.jsonl \
 --images_file multimodalqa_final_dataset_pipeline_camera_ready_MMQA_images.jsonl \
 --images_path final_dataset_images \
-
+```
 This script will store the embeddings of docs in the ./retriever_release_test/dev_blocks.txt file. For your convenience, we upload the dev_blocks.txt generated via the 'checkpoint-5061' in this link.
 
 5. Run the train_pipeline.py.
+```
 python3 train_pipeline.py 
 --train_file MMCoQA_train.txt --dev_file MMCoQA_dev.txt --test_file MMCoQA_test.txt \
 --passages_file multimodalqa_final_dataset_pipeline_camera_ready_MMQA_texts.jsonl \
@@ -54,7 +57,7 @@ python3 train_pipeline.py
 --images_path final_dataset_images \
 --gen_passage_rep_output ./retriever_release_test/dev_blocks.txt \
 --retrieve_checkpoint ./retriever_release_test/checkpoint-5061 \
-
+```
 This script will train the pipeline (retriever and answer extraction components) and store the checkpoints in release_test file. For your convenience, we upload the checkpoint 'checkpoint-12000' in this link. 
 The checkpoint 'checkpoint-12000' could achieve the results:
 Dev set: {"f1": 4.586325704965762, "EM": 0.020654044750430294, "retriever_ndcg": 0.07209415622067673, "retriever_recall": 0.42168674698795183}
