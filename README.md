@@ -18,10 +18,41 @@ Each line is a json format, that contains one question, the gold question, the c
 
 # Reporduce the MAE(pretrain) in our paper
 1. Download the MMCoQA dataset and uncompress the zip file (including the final_dataset_images.zip).
-2. MAE(pretrain) use the pretrained text based CoQA checkpoint from the work ORConvQA. Please download it from this link and move it into the retriever_checkpoint file.
-3. Directly run train.retriever.py.
+2. MAE(pretrain) use the pretrained text based CoQA checkpoint from the work ORConvQA to initialize the text encoder. Please download it from this link and move it into the retriever_checkpoint file.
+3. Directly run train_retriever.py by setting the corresponding file path.
+python3 train_retriever.py 
+--train_file MMCoQA_train.txt --dev_file MMCoQA_dev.txt --test_file MMCoQA_test.txt \
+--passages_file multimodalqa_final_dataset_pipeline_camera_ready_MMQA_texts.jsonl
+--multimodalqa_final_dataset_pipeline_camera_ready_MMQA_tables.jsonl
+--images_file multimodalqa_final_dataset_pipeline_camera_ready_MMQA_images.jsonl
+--images_path final_dataset_images
+--retrieve_checkpoint ./retriever_checkpoint/checkpoint-5917
 
+This script will store the checkpoints under the retriever_release_test file. For your convenience, we upload the checkpoint 'checkpoint-5061' in this link.
 
+4. Generate embedding of docs.
+python3 train_retriever.py 
+--gen_passage_rep True 
+--retrieve_checkpoint ./retriever_release_test/checkpoint-5061 \
+--train_file MMCoQA_train.txt --dev_file MMCoQA_dev.txt --test_file MMCoQA_test.txt \
+--passages_file multimodalqa_final_dataset_pipeline_camera_ready_MMQA_texts.jsonl
+--multimodalqa_final_dataset_pipeline_camera_ready_MMQA_tables.jsonl
+--images_file multimodalqa_final_dataset_pipeline_camera_ready_MMQA_images.jsonl
+--images_path final_dataset_images
+
+This script will store the embeddings of docs in the ./retriever_release_test/dev_blocks.txt file. For your convenience, we upload the dev_blocks.text generated via the 'checkpoint-5061' in this link.
+
+5. Run the train_pipeline.py.
+python3 train_pipeline.py 
+--train_file MMCoQA_train.txt --dev_file MMCoQA_dev.txt --test_file MMCoQA_test.txt \
+--passages_file multimodalqa_final_dataset_pipeline_camera_ready_MMQA_texts.jsonl
+--multimodalqa_final_dataset_pipeline_camera_ready_MMQA_tables.jsonl
+--images_file multimodalqa_final_dataset_pipeline_camera_ready_MMQA_images.jsonl
+--images_path final_dataset_images
+--gen_passage_rep_output ./retriever_release_test/dev_blocks.txt
+--retrieve_checkpoint ./retriever_release_test/checkpoint-5061 \
+
+This script will train the pipeline (retriever and answer extraction components) and store the checkpoints in release_test file. For your convenience, we upload the checkpoint 'checkpoint-12000' in this link. 
 
 # Environment Requirement
 The code has been tested running under Python 3.8.8 The required packages are as follows:
