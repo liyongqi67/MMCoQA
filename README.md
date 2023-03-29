@@ -19,9 +19,9 @@ Each line is a json format, that contains one question, the gold question, the c
 # Reporduce the MAE(pretrain) in our paper
 1) Download the MMCoQA dataset and uncompress the zip file (including the final_dataset_images.zip).
 
-2) MAE(pretrain) use the pretrained text based CoQA checkpoint from the work ORConvQA to initialize the text encoder. Please download it (checkpoint-5917) from this link and move it into the retriever_checkpoint folder.
+2) MAE(pretrain) use the pretrained text based CoQA checkpoint from the work ORConvQA to initialize the text encoder. Please download it (checkpoint-5917) from this [link](https://drive.google.com/file/d/15d7xPEZCIkN4m7Pov6ZPBVjWlEsy9Q8p/view?usp=sharing) and move it into the retriever_checkpoint folder.
 
-3) Directly run train_retriever.py by setting the corresponding file path.
+3) Directly run train_retriever.py by setting the corresponding file paths.
 
 ```
 python3 train_retriever.py 
@@ -32,9 +32,9 @@ python3 train_retriever.py
 --images_path final_dataset_images \
 --retrieve_checkpoint ./retriever_checkpoint/checkpoint-5917
 ```
-This script will store the checkpoints under the retriever_release_test folder. For your convenience, we upload our results (the checkpoint 'checkpoint-5061') in this link.
+This script will store the checkpoints under the retriever_release_test folder. For your convenience, we upload our results (the checkpoint 'checkpoint-5061') in this [link](https://drive.google.com/file/d/1549wBJt8lgU19a_TM9K-GjkEL5GRbV38/view?usp=sharing).
 
-4. Generate embedding of docs via setting retrieve_checkpoint as the corresponding checkpoint file under the retriever_release_test folder.
+4. Generate embedding of evidence via setting 'retrieve_checkpoint' as the corresponding checkpoint file under the retriever_release_test folder.
 ```
 python3 train_retriever.py 
 --gen_passage_rep True \
@@ -45,7 +45,7 @@ python3 train_retriever.py
 --images_file multimodalqa_final_dataset_pipeline_camera_ready_MMQA_images.jsonl \
 --images_path final_dataset_images \
 ```
-  This script will store the embeddings of docs in the ./retriever_release_test/dev_blocks.txt file. For your convenience, we upload the dev_blocks.txt generated via the 'checkpoint-5061' in this link.
+  This script will store the embeddings of docs in the ./retriever_release_test/dev_blocks.txt file. For your convenience, we upload the dev_blocks.txt generated via the 'checkpoint-5061' in this [link](https://drive.google.com/file/d/1549wBJt8lgU19a_TM9K-GjkEL5GRbV38/view?usp=sharing).
 
 5. Run the train_pipeline.py.
 ```
@@ -58,7 +58,7 @@ python3 train_pipeline.py
 --gen_passage_rep_output ./retriever_release_test/dev_blocks.txt \
 --retrieve_checkpoint ./retriever_release_test/checkpoint-5061 \
 ```
-  This script will train the pipeline (retriever and answer extraction components) and store the checkpoints in release_test folder. For your convenience, we upload our results 'checkpoint-12000' in this link. 
+  This script will train the pipeline (retriever and answer extraction components) and store the checkpoints in release_test folder. For your convenience, we upload our results 'checkpoint-12000' in this [link](https://drive.google.com/file/d/1HW__WoZ13qqtPrw8t-bLb9eTEHzjsDJ0/view?usp=sharing). 
   
   The checkpoint 'checkpoint-12000' could achieve the results in the paper:
   
