@@ -167,8 +167,8 @@ class RetrieverDataset(Dataset):
             if self._is_pretraining:
                 question_text_for_retriever = entry["gold_question"]
             else:
-                # question_text_for_retriever = entry["gold_question"]
-                # question_text = entry["gold_question"]
+                question_text_for_retriever = entry["gold_question"]
+                question_text = entry["gold_question"]
 
                 orig_question_text = entry["question"]
                 history = entry['history']

@@ -42,7 +42,7 @@ from utils import (LazyQuacDatasetGlobal, RawResult,
                    write_predictions, write_final_predictions, 
                    get_retrieval_metrics, gen_reader_features)
 from retriever_utils import RetrieverDataset
-from modeling import Pipeline, BertForOrconvqaGlobal, BertForRetrieverOnlyPositivePassage
+from modeling import Pipeline, BertForOrconvqaGlobal, BertForRetrieverOnlyPositivePassage,AlbertForRetrieverOnlyPositivePassage
 from scorer import quac_eval
 
 
@@ -55,7 +55,7 @@ ALL_MODELS = list(BertConfig.pretrained_config_archive_map.keys())
 
 MODEL_CLASSES = {
     'reader': (BertConfig, BertForOrconvqaGlobal, BertTokenizer),
-    'retriever': (BertConfig, BertForRetrieverOnlyPositivePassage, BertTokenizer),
+    'retriever': (AlbertConfig, AlbertForRetrieverOnlyPositivePassage, AlbertTokenizer),
 }
 
 
@@ -394,7 +394,7 @@ def evaluate(args, model, retriever_tokenizer, reader_tokenizer, prefix=""):
         retrieval_results = retrieve(args, qids, qid_to_idx, query_reps,
                                      item_ids, item_id_to_idx, item_reps,
                                      qrels, qrels_sparse_matrix,
-                                     gpu_index, include_positive_passage=True)
+                                     gpu_index, include_positive_passage=False)
         pids_for_retriever = retrieval_results['pids_for_retriever']
 
         retriever_probs = retrieval_results['retriever_probs']
@@ -621,7 +621,7 @@ parser.add_argument("--qrels", default='/home/share/liyongqi/project/MMCoQA/data
                     help="qrels to evaluate open retrieval")
 
 parser.add_argument("--gen_passage_rep_output", 
-                    default='./retriever_release_test3/dev_blocks.txt', type=str,
+                    default='./retriever_release_test/dev_blocks.txt', type=str,
                     help="passage representations")
 parser.add_argument("--output_dir", default='./release_test', type=str, required=False,
                     help="The output directory where the model checkpoints and predictions will be written.")
@@ -639,9 +639,9 @@ parser.add_argument("--prepend_history_questions", default=True, type=str2bool, 
 parser.add_argument("--prepend_history_answers", default=False, type=str2bool, required=False,
                     help="whether to prepend history answers to the current question")
 
-parser.add_argument("--do_train", default=False, type=str2bool,
+parser.add_argument("--do_train", default=True, type=str2bool,
                     help="Whether to run training.")
-parser.add_argument("--do_eval", default=False, type=str2bool,
+parser.add_argument("--do_eval", default=True, type=str2bool,
                     help="Whether to run eval on the dev set.")
 parser.add_argument("--do_test", default=True, type=str2bool,
                     help="Whether to run eval on the test set.")
@@ -708,19 +708,19 @@ parser.add_argument('--server_port', type=str, default='',
 # retriever arguments
 parser.add_argument("--retriever_config_name", default="", type=str,
                     help="Pretrained config name or path if not the same as model_name")
-parser.add_argument("--retriever_model_type", default='bert', type=str, required=False,
+parser.add_argument("--retriever_model_type", default='albert', type=str, required=False,
                     help="retriever model type")
-parser.add_argument("--retriever_model_name_or_path", default='bert-base-uncased', type=str, required=False,
+parser.add_argument("--retriever_model_name_or_path", default='albert-base-v2', type=str, required=False,
                     help="retriever model name")
-parser.add_argument("--retriever_tokenizer_name", default="bert-base-uncased", type=str,
+parser.add_argument("--retriever_tokenizer_name", default="albert-base-v2", type=str,
                     help="Pretrained tokenizer name or path if not the same as model_name")
-parser.add_argument("--retriever_cache_dir", default="./huggingface_cache/bert-base-uncased/", type=str,
+parser.add_argument("--retriever_cache_dir", default="../huggingface_cache/albert-base-v2/", type=str,
                     help="Where do you want to store the pre-trained models downloaded from s3")
 parser.add_argument("--retrieve_checkpoint",
-                    default='./retriever_release_test3/checkpoint-5061', type=str,
+                    default='./retriever_release_test/checkpoint-5061', type=str,
                     help="generate query/passage representations with this checkpoint")
 parser.add_argument("--retrieve_tokenizer_dir",
-                    default='./retriever_release_test3', type=str,
+                    default='./retriever_release_test', type=str,
                     help="dir that contains tokenizer files")
 
 parser.add_argument("--given_query", default=True, type=str2bool,
@@ -753,7 +753,7 @@ parser.add_argument("--reader_model_type", default='bert', type=str, required=Fa
                     help="reader model type")
 parser.add_argument("--reader_tokenizer_name", default="bert-base-uncased", type=str,
                     help="Pretrained tokenizer name or path if not the same as model_name")
-parser.add_argument("--reader_cache_dir", default="./huggingface_cache/bert-base-uncased/", type=str,
+parser.add_argument("--reader_cache_dir", default="../huggingface_cache/bert-base-uncased/", type=str,
                     help="Where do you want to store the pre-trained models downloaded from s3")
 parser.add_argument("--reader_max_seq_length", default=512, type=int,
                     help="The maximum total input sequence length after WordPiece tokenization. Sequences "
@@ -776,7 +776,7 @@ parser.add_argument("--qa_loss_factor", default=1.0, type=float,
                     help="total_loss = qa_loss_factor * qa_loss + retrieval_loss_factor * retrieval_loss")
 parser.add_argument("--retrieval_loss_factor", default=1.0, type=float,
                     help="total_loss = qa_loss_factor * qa_loss + retrieval_loss_factor * retrieval_loss")
-parser.add_argument("--top_k_for_reader", default=5, type=int,
+parser.add_argument("--top_k_for_reader", default=10, type=int,
                     help="update the reader with top k passages")
 parser.add_argument("--use_rerank_prob", default=True, type=str2bool,
                     help="include rerank probs in final answer ranking")
@@ -938,8 +938,6 @@ for s in image_answers_set:
     image_answers_str=image_answers_str+" "+str(s)
 
 
-
-
 images_titles={}
 with open(args.images_file,'r') as f:
     lines=f.readlines()
@@ -949,18 +947,13 @@ with open(args.images_file,'r') as f:
 
 
 
-
 item_ids, item_reps = [], []
 with open(args.gen_passage_rep_output) as fin:
     for line in tqdm(fin):
         dic = json.loads(line.strip())
         item_ids.append(dic['id'])
         item_reps.append(dic['rep'])
-        # if(dic['id'] not in passages_dict):
-        #     item_reps.append(dic['rep'])
-
 item_reps = np.asarray(item_reps, dtype='float32')
-print('item_reps shape', item_reps.shape)
 item_ids=np.asarray(item_ids)
 
 logger.info('constructing passage faiss_index')

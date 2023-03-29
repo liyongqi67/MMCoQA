@@ -206,11 +206,7 @@ def eval_fn(val_results, model_results, verbose):
         if turn not in modality_performance_across_turns:
           modality_performance_across_turns[turn]={0:[],1:[],2:[]}
 
-        # f1
-        # modality_performance_across_turns[turn][qid_modality[q_idx]].append(max(scores_for_ground_truths, key=lambda x: x))
-
-        #EM
-        modality_performance_across_turns[turn][qid_modality[q_idx]].append(int(tag))
+        modality_performance_across_turns[turn][qid_modality[q_idx]].append(max(scores_for_ground_truths, key=lambda x: x))
 
 
   metric_json = {"f1": 100.0 * sum(f1s) / len(f1s), "human_f1": 100.0 * sum(human_f1) / len(human_f1),"EM":sum(EM) / len(EM)}
@@ -225,11 +221,11 @@ def eval_fn(val_results, model_results, verbose):
   print("=======================")
 
 
-  for turn in modality_performance_across_turns:
-    print('turn',turn)
-    print('text',sum(modality_performance_across_turns[turn][0])/len(modality_performance_across_turns[turn][0]))
-    print('table',sum(modality_performance_across_turns[turn][1])/len(modality_performance_across_turns[turn][1]))
-    print('image',sum(modality_performance_across_turns[turn][2])/len(modality_performance_across_turns[turn][2]))
+  # for turn in modality_performance_across_turns:
+  #   print('turn',turn)
+  #   print('text',sum(modality_performance_across_turns[turn][0])/len(modality_performance_across_turns[turn][0]))
+  #   print('table',sum(modality_performance_across_turns[turn][1])/len(modality_performance_across_turns[turn][1]))
+  #   print('image',sum(modality_performance_across_turns[turn][2])/len(modality_performance_across_turns[turn][2]))
 
   return metric_json
 

@@ -36,7 +36,7 @@ import pytrec_eval
 from transformers import WEIGHTS_NAME, BertConfig, BertTokenizer, AlbertConfig, AlbertTokenizer
 from transformers import AdamW, get_linear_schedule_with_warmup
 from retriever_utils import RetrieverDataset, GenPassageRepDataset
-from modeling import BertForRetrieverOnlyPositivePassage
+from modeling import BertForRetrieverOnlyPositivePassage,AlbertForRetrieverOnlyPositivePassage
 
 
 # In[2]:
@@ -48,6 +48,7 @@ ALL_MODELS = list(BertConfig.pretrained_config_archive_map.keys())
 
 MODEL_CLASSES = {
     'bert': (BertConfig, BertForRetrieverOnlyPositivePassage, BertTokenizer),
+    'albert': (AlbertConfig, AlbertForRetrieverOnlyPositivePassage, AlbertTokenizer)
 }
 
 
@@ -431,13 +432,13 @@ parser.add_argument("--dev_file", default='/home/share/liyongqi/project/MMCoQA/d
 parser.add_argument("--test_file", default='/home/share/liyongqi/project/MMCoQA/data/MMCoQA_data/final_data/QA pairs/MMCoQA_test.txt',
                     type=str, required=False,
                     help="open retrieval quac json for predictions.")
-parser.add_argument("--model_type", default='bert', type=str, required=False,
+parser.add_argument("--model_type", default='albert', type=str, required=False,
                     help="Model type selected in the list: " + ", ".join(MODEL_CLASSES.keys()))
 # parser.add_argument("--model_name_or_path", default='bert-base-uncased', type=str, required=False,
 #                     help="Path to pre-trained model or shortcut name selected in the list: " + ", ".join(ALL_MODELS))
-parser.add_argument("--model_name_or_path", default='bert-base-uncased', type=str, required=False,
+parser.add_argument("--model_name_or_path", default='albert-base-v2', type=str, required=False,
                     help="Path to pre-trained model or shortcut name selected in the list: " + ", ".join(ALL_MODELS))
-parser.add_argument("--output_dir", default='./retriever_release_test3', type=str, required=False,
+parser.add_argument("--output_dir", default='./retriever_release_test', type=str, required=False,
                     help="The output directory where the model checkpoints and predictions will be written.")
 parser.add_argument("--qrels", default='/home/share/liyongqi/project/MMCoQA/data/MMCoQA_data/final_data/QA pairs/qrels.txt', type=str, required=False,
                     help="qrels to evaluate open retrieval")
@@ -453,7 +454,7 @@ parser.add_argument("--only_positive_passage", default=True, type=str2bool,
 parser.add_argument("--gen_passage_rep", default=True, type=str2bool,
                     help="generate passage representations for all ")
 parser.add_argument("--retrieve_checkpoint", 
-                    default='./retriever_release_test3/checkpoint-5061', type=str,
+                    default='./retriever_release_test/checkpoint-5061', type=str,
                     help="generate query/passage representations with this checkpoint")
 parser.add_argument("--gen_passage_rep_input", 
                     default='/mnt/scratch/chenqu/orconvqa/v5/test_retriever/dev_blocks.txt', type=str,
@@ -468,7 +469,7 @@ parser.add_argument("--images_file",
                     default='/home/share/liyongqi/project/MMCoQA/data/MMCoQA_data/final_data/multimodal_evidence_collection/images/multimodalqa_final_dataset_pipeline_camera_ready_MMQA_images.jsonl', type=str,
                     help="the file contains passages")
 parser.add_argument("--gen_passage_rep_output", 
-                    default='./retriever_release_test3/dev_blocks.txt', type=str,
+                    default='./retriever_release_test/dev_blocks.txt', type=str,
                     help="passage representations")
 parser.add_argument("--retrieve", default=False, type=str2bool,
                     help="generate query reps and retrieve passages")
@@ -478,9 +479,9 @@ parser.add_argument("--config_name", default="", type=str,
                     help="Pretrained config name or path if not the same as model_name")
 # parser.add_argument("--tokenizer_name", default="bert-base-uncased", type=str,
 #                     help="Pretrained tokenizer name or path if not the same as model_name")
-parser.add_argument("--tokenizer_name", default="bert-base-uncased", type=str,
+parser.add_argument("--tokenizer_name", default="albert-base-v2", type=str,
                     help="Pretrained tokenizer name or path if not the same as model_name")
-parser.add_argument("--cache_dir", default="./huggingface_cache/bert-base-uncased/", type=str,
+parser.add_argument("--cache_dir", default="../huggingface_cache/albert-base-v2/", type=str,
                     help="Where do you want to store the pre-trained models downloaded from s3")
 
 parser.add_argument("--query_max_seq_length", default=30, type=int,
@@ -515,7 +516,7 @@ parser.add_argument("--adam_epsilon", default=1e-8, type=float,
                     help="Epsilon for Adam optimizer.")
 parser.add_argument("--max_grad_norm", default=1.0, type=float,
                     help="Max gradient norm.")
-parser.add_argument("--num_train_epochs", default=32.0, type=float,
+parser.add_argument("--num_train_epochs", default=22.0, type=float,
                     help="Total number of training epochs to perform.")
 parser.add_argument("--max_steps", default=-1, type=int,
                     help="If > 0: set total number of training steps to perform. Override num_train_epochs.")
@@ -618,11 +619,7 @@ model = model_class.from_pretrained(args.model_name_or_path,
                                         '.ckpt' in args.model_name_or_path),
                                     config=config,
                                     cache_dir=args.cache_dir if args.cache_dir else None)
-# model = model_class.from_pretrained(args.retrieve_checkpoint,
-#                                     from_tf=bool(
-#                                         '.ckpt' in args.model_name_or_path),
-#                                     config=config,
-#                                     cache_dir=args.cache_dir if args.cache_dir else None)
+model = model_class.from_pretrained('./retriever_checkpoint/checkpoint-5917/')
 
 if args.local_rank == 0:
     # Make sure only the first process in distributed training will download model & vocab
@@ -843,8 +840,7 @@ if args.do_eval and args.local_rank in [-1, 0]:
 
 
 if args.do_test and args.local_rank in [-1, 0]:
-#    best_global_step = best_metrics['global_step']
-    best_global_step = '12000'
+    best_global_step = best_metrics['global_step']
     best_checkpoint = os.path.join(
         args.output_dir, 'checkpoint-{}'.format(best_global_step))
     logger.info("Test the best checkpoint: %s", best_checkpoint)
