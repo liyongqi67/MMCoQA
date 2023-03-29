@@ -45,7 +45,7 @@ python3 train_retriever.py
 --images_file multimodalqa_final_dataset_pipeline_camera_ready_MMQA_images.jsonl \
 --images_path final_dataset_images \
 ```
-This script will store the embeddings of docs in the ./retriever_release_test/dev_blocks.txt file. For your convenience, we upload the dev_blocks.txt generated via the 'checkpoint-5061' in this link.
+  This script will store the embeddings of docs in the ./retriever_release_test/dev_blocks.txt file. For your convenience, we upload the dev_blocks.txt generated via the 'checkpoint-5061' in this link.
 
 5. Run the train_pipeline.py.
 ```
@@ -58,10 +58,10 @@ python3 train_pipeline.py
 --gen_passage_rep_output ./retriever_release_test/dev_blocks.txt \
 --retrieve_checkpoint ./retriever_release_test/checkpoint-5061 \
 ```
-This script will train the pipeline (retriever and answer extraction components) and store the checkpoints in release_test folder. For your convenience, we upload our results 'checkpoint-12000' in this link. 
-The checkpoint 'checkpoint-12000' could achieve the results in the paper:
-Dev set: {"f1": 4.586325704965762, "EM": 0.020654044750430294, "retriever_ndcg": 0.07209415622067673, "retriever_recall": 0.42168674698795183}
-Test set: {"f1": 3.584818194987687, "EM": 0.0288135593220339, "retriever_ndcg": 0.07655641068040793, "retriever_recall": 0.4271186440677966}
+  This script will train the pipeline (retriever and answer extraction components) and store the checkpoints in release_test folder. For your convenience, we upload our results 'checkpoint-12000' in this link. 
+  The checkpoint 'checkpoint-12000' could achieve the results in the paper:
+  Dev set: {"f1": 4.586325704965762, "EM": 0.020654044750430294, "retriever_ndcg": 0.07209415622067673, "retriever_recall": 0.42168674698795183}
+  Test set: {"f1": 3.584818194987687, "EM": 0.0288135593220339, "retriever_ndcg": 0.07655641068040793, "retriever_recall": 0.4271186440677966}
 # Environment Requirement
 The code has been tested running under Python 3.8.8 The required packages are as follows:
 - pytorch == 1.8.0
